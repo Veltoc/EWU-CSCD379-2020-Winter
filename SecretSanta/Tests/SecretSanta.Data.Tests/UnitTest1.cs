@@ -3,10 +3,10 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace SecretSanta.Data.Tests
 {
     [TestClass]
-    public class UnitTest1
+    public class ProjectTests
     {
         [TestMethod]
-        public void TestMethod1()
+        public void Create_Project_Succsess()
         {
         }
     }
