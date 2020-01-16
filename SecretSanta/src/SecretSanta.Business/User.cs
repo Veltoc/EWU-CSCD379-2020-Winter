@@ -13,7 +13,7 @@ namespace SecretSanta.Business
             FirstName = firstName;
             LastName = lastName;
             Gifts = gifts;
-            // new List<Gift>();
+           
 
         }
         public int Id { get; }
@@ -29,7 +29,7 @@ namespace SecretSanta.Business
             get => _LastName;
             set => _LastName = string.IsNullOrWhiteSpace(value) ? throw new ArgumentNullException(nameof(value)) : value;
         }
-        public List<Gift> Gifts { get;} // got a warning to make this read only.
+        public List<Gift> Gifts { get; set; } 
     }
 
 }
