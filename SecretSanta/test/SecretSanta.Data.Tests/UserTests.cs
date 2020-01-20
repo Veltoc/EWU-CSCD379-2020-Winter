@@ -15,7 +15,6 @@ namespace SecretSanta.Data.Tests
 	public class UserTests : TestBase
 	{
 		[TestMethod]
-		[ExpectedException(typeof(ArgumentNullException))]
 		public async Task CreateUser_ShouldSaveIntoDatabase()
 		{
 			int userId = -1;
@@ -23,14 +22,13 @@ namespace SecretSanta.Data.Tests
 			{
 				var user = new User
 				{
-					Id = 1,
 					FirstName = "Buzz",
 					LastName = "Lightyear",
-					Gifts = new List<Gift>()
 				};
 				applicationDbContext.Users.Add(user);
 
 				await applicationDbContext.SaveChangesAsync();
+				userId = user.Id;
 
 			}
 			using (var applicationDbContext = new ApplicationDbContext(Options))
@@ -40,7 +38,6 @@ namespace SecretSanta.Data.Tests
 				Assert.IsNotNull(user);
 				Assert.AreEqual("Buzz", user.FirstName);
 				Assert.AreEqual("Lightyear", user.LastName);
-				Assert.IsNotNull(user.Gifts);
 
 			}
 
@@ -60,19 +57,15 @@ namespace SecretSanta.Data.Tests
 			{
 				var user = new User
 				{
-					Id = 1,
 					FirstName = "Buzz",
 					LastName = "Lightyear",
-					Gifts = new List<Gift>()
 				};
 				applicationDbContext.Users.Add(user);
 
 				var user2 = new User
 				{
-					Id = 2,
 					FirstName = "Buzz",
 					LastName = "Lightyear",
-					Gifts = new List<Gift>()
 				};
 				applicationDbContext.Users.Add(user2);
 
@@ -90,7 +83,6 @@ namespace SecretSanta.Data.Tests
 				Assert.IsNotNull(user);
 				Assert.AreEqual("Buzz", user.FirstName);
 				Assert.AreEqual("Lightyear", user.LastName);
-				Assert.IsNotNull(user.Gifts);
 			}
 		}
 
@@ -106,19 +98,15 @@ namespace SecretSanta.Data.Tests
 			{
 				var user = new User
 				{
-					Id = 1,
 					FirstName = "Buzz",
 					LastName = "Lightyear",
-					Gifts = new List<Gift>()
 				};
 				applicationDbContext.Users.Add(user);
 
 				var user2 = new User
 				{
-					Id = 2,
 					FirstName = "Buzz",
 					LastName = "Lightyear",
-					Gifts = new List<Gift>()
 				};
 				applicationDbContext.Users.Add(user2);
 
@@ -150,43 +138,6 @@ namespace SecretSanta.Data.Tests
 				Assert.AreEqual("blightyear", user.CreatedBy);
 				Assert.AreEqual("troosevelt", user.ModifiedBy);
 			}
-		}
-
-		//[TestMethod]
-		public async Task AddGift_WithUser_ShouldCreateForeignRelationship()
-		{
-			// Arrange
-			var gift = new Gift
-			{
-				Title = "Something",
-				Description = "blightyear",
-				Url = "blightyear",
-				User = new User()
-			};
-			var user = new User
-			{
-				Id = 1,
-				FirstName = "Buzz",
-				LastName = "lightyear",
-				Gifts = new List<Gift>(),
-				CreatedBy = "blightyear",
-				ModifiedBy = "blightyear"
-			};
-
-			// Act
-			////using (ApplicationDbContext dbContext = new ApplicationDbContext(Options)) {
-			//	gift.User = user;
-				//dbContext.Posts.Add(gift);
-			//	await dbContext.SaveChangesAsync();
-			//}
-
-			// Assert
-			//using (ApplicationDbContext dbContext = new ApplicationDbContext(Options)) {
-				//var gifts = await dbContext.Posts.Include(p => p.User).ToListAsync();
-			//	Assert.AreEqual(1, gifts.Count);
-			//	Assert.AreEqual(gift.Title, gifts[0].Title);
-			//	Assert.AreNotEqual(0, gifts[0].Id);
-			///}
 		}
 	}
 }

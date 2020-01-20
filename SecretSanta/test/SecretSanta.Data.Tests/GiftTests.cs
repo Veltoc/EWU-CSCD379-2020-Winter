@@ -3,10 +3,7 @@ using System;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
-using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Text;
@@ -19,7 +16,6 @@ using System.Threading.Tasks;
         public class GiftTests : TestBase
         {
             [TestMethod]
-            [ExpectedException(typeof(ArgumentNullException))]
             public async Task CreateGift_ShouldSaveIntoDatabase()
             {
                 int giftId = -1;
@@ -27,16 +23,16 @@ using System.Threading.Tasks;
                 {
                 var gift = new Gift
                 {
-                    Id = 1,
                     Title = "Cooking For Dummies",
                     Description = "a cookbook for dummies",
                     Url = "www.dummies.com",
-                    User = new User()
+                   User = new User()
                         
                     };
                     applicationDbContext.Gifts.Add(gift);
 
                     await applicationDbContext.SaveChangesAsync();
+                      giftId = gift.Id;
 
                 }
                 using (var applicationDbContext = new ApplicationDbContext(Options))
@@ -47,7 +43,6 @@ using System.Threading.Tasks;
                     Assert.AreEqual("Cooking For Dummies", gift.Title);
                     Assert.AreEqual("a cookbook for dummies", gift.Description);
                     Assert.AreEqual("www.dummies.com", gift.Url);
-                    Assert.IsNotNull(gift.User);
 
                 }
 
@@ -67,19 +62,21 @@ using System.Threading.Tasks;
                 {
                     var gift = new Gift
                     {
-                        Id = 1,
+                      
                         Title = "Cooking For Dummies",
                         Description = "a cookbook for dummies",
-                        Url = "www.dummies.com"
+                        Url = "www.dummies.com",
+                        User = new User()
                     };
                     applicationDbContext.Gifts.Add(gift);
 
                     var gift2 = new Gift
                     {
-                        Id = 2,
+                      
                         Title = "Cooking For Dummies",
                         Description = "a cookbook for dummies",
-                        Url = "www.dummies.com"
+                        Url = "www.dummies.com",
+                        User = new User()
                     };
                     applicationDbContext.Gifts.Add(gift2);
 
@@ -97,7 +94,6 @@ using System.Threading.Tasks;
                 Assert.AreEqual("Cooking For Dummies", gift.Title);
                 Assert.AreEqual("a cookbook for dummies", gift.Description);
                 Assert.AreEqual("www.dummies.com", gift.Url);
-                Assert.IsNotNull(gift.User);
             }
             }
 
@@ -113,19 +109,21 @@ using System.Threading.Tasks;
                 {
                     var gift = new Gift
                     {
-                        Id = 1,
+                        
                         Title = "Cooking For Dummies",
                         Description = "a cookbook for dummies",
-                        Url = "www.dummies.com"
+                        Url = "www.dummies.com",
+                        User = new User()
                     };
                     applicationDbContext.Gifts.Add(gift);
 
                     var gift2 = new Gift
                     {
-                        Id = 2,
+                        
                         Title = "Cooking For Dummies",
                         Description = "a cookbook for dummies",
-                        Url = "www.dummies.com"
+                        Url = "www.dummies.com",
+                        User = new User()
                     };
                     applicationDbContext.Gifts.Add(gift2);
 
@@ -158,5 +156,46 @@ using System.Threading.Tasks;
                     Assert.AreEqual("boring", gift.ModifiedBy);
                 }
          }
+        [TestMethod]
+        public async Task AddGift_WithUser_ShouldCreateForeignRelationship()
+        {
+            // Arrange
+            var gift = new Gift
+            {
+                Title = "Cooking For Dummies",
+                Description = "a cookbook for dummies",
+                Url = "www.dummies.com",
+                User = new User(),
+                CreatedBy = "blightyear",
+                ModifiedBy = "blightyear"
+            };
+            var user = new User
+            {
+               
+                FirstName = "Buzz",
+                LastName = "lightyear",
+                Gifts = new List<Gift>(),
+                CreatedBy = "blightyear",
+                ModifiedBy = "blightyear"
+            };
+
+            //Act
+            using (ApplicationDbContext dbContext = new ApplicationDbContext(Options))
+            {
+                gift.User = user;
+                dbContext.Gifts.Add(gift);
+                await dbContext.SaveChangesAsync();
+            }
+
+            //Assert
+            using (ApplicationDbContext dbContext = new ApplicationDbContext(Options))
+            {
+                var gifts = await dbContext.Gifts.Include(g => g.User).ToListAsync();
+                Assert.AreEqual(1, gifts.Count);    
+                Assert.AreEqual(gift.Title, gifts[0].Title);
+                Assert.AreEqual(gift.Description, gifts[0].Description);
+                // Assert.AreNotEqual(0, gifts[0].Id); should we implement a connecting id?
+            }
+        }
     }
 }

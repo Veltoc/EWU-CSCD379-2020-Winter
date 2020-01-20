@@ -31,14 +31,12 @@ namespace SecretSanta.Data
             modelBuilder.Entity<UserGroup>()
                 .HasOne(ug => ug.User)
                 .WithMany(u => u.UserGroups)
-                .HasForeignKey(ug => ug.UserId)
-                .OnDelete(DeleteBehavior.Cascade);
+                .HasForeignKey(ug => ug.UserId);
 
             modelBuilder.Entity<UserGroup>()
                 .HasOne(ug => ug.Group)
                 .WithMany(g => g.UserGroup)
-                .HasForeignKey(ug => ug.GroupId)
-                .OnDelete(DeleteBehavior.Cascade);
+                .HasForeignKey(ug => ug.GroupId);
         }
 
         public override int SaveChanges()
