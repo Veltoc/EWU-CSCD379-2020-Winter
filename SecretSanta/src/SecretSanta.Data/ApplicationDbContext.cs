@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace SecretSanta.Data
 {
-    class ApplicationDbContext :DbContext
+    public class ApplicationDbContext : DbContext
     {
         public DbSet<User> Users { get; set; }
         public DbSet<Gift> Gifts { get; set; }
@@ -30,13 +30,15 @@ namespace SecretSanta.Data
 
             modelBuilder.Entity<UserGroup>()
                 .HasOne(ug => ug.User)
-                .WithMany(u => u.UserGroup)
-                .HasForeignKey(ug => ug.UserId);
+                .WithMany(u => u.UserGroups)
+                .HasForeignKey(ug => ug.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<UserGroup>()
                 .HasOne(ug => ug.Group)
                 .WithMany(g => g.UserGroup)
-                .HasForeignKey(ug => ug.GroupId);
+                .HasForeignKey(ug => ug.GroupId)
+                .OnDelete(DeleteBehavior.Cascade);
         }
 
         public override int SaveChanges()
