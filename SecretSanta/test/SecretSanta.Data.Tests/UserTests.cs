@@ -15,6 +15,27 @@ namespace SecretSanta.Data.Tests
 	public class UserTests : TestBase
 	{
 		[TestMethod]
+		[ExpectedException(typeof(ArgumentNullException))]
+		public void User_SetFirstNameToNull_ThrowsArgumentNullException()
+		{
+			var user = new User
+			{
+				FirstName = null!,
+				LastName = "Lightyear",
+			};
+		}
+
+		[TestMethod]
+		[ExpectedException(typeof(ArgumentNullException))]
+		public void User_SetLastNameToNull_ThrowsArgumentNullException()
+		{
+			var user = new User
+			{
+				FirstName = "Buzz",
+				LastName = null!,
+			};
+		}
+		[TestMethod]
 		public async Task CreateUser_ShouldSaveIntoDatabase()
 		{
 			int userId = -1;

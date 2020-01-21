@@ -12,6 +12,7 @@ namespace SecretSanta.Data.Tests
     [TestClass]
     public class UserGroupTest : TestBase
     {
+
         [TestMethod]
         public async Task CreateUserWithManyGroups()
         {

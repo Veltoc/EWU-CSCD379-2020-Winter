@@ -15,7 +15,48 @@ using System.Threading.Tasks;
         [TestClass]
         public class GiftTests : TestBase
         {
-            [TestMethod]
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentNullException))]
+        public void Gift_SetTitleToNull_ThrowsArgumentNullException()
+        {
+            var gift = new Gift
+            {
+                Title = null!,
+                Description = "a cookbook for dummies",
+                Url = "www.dummies.com",
+                User = new User()
+
+            };
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentNullException))]
+        public void Gift_SetDescriptionToNull_ThrowsArgumentNullException()
+        {
+            var gift = new Gift
+            {
+                Title = "Cooking For Dummies",
+                Description = null!,
+                Url = "www.dummies.com",
+                User = new User()
+
+            };
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentNullException))]
+        public void Gift_SetUrlToNull_ThrowsArgumentNullException()
+        {
+            var gift = new Gift
+            {
+                Title = "Cooking For Dummies",
+                Description = "a cookbook for dummies",
+                Url = null!,
+                User = new User()
+
+            };
+        }
+        [TestMethod]
             public async Task CreateGift_ShouldSaveIntoDatabase()
             {
                 int giftId = -1;
@@ -194,7 +235,7 @@ using System.Threading.Tasks;
                 Assert.AreEqual(1, gifts.Count);    
                 Assert.AreEqual(gift.Title, gifts[0].Title);
                 Assert.AreEqual(gift.Description, gifts[0].Description);
-                // Assert.AreNotEqual(0, gifts[0].Id); should we implement a connecting id? or did i miss something
+                Assert.AreNotEqual(0, gifts[0].Id); 
             }
         }
     }
