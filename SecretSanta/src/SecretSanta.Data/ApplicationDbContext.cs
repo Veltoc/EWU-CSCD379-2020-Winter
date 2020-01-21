@@ -17,13 +17,14 @@ namespace SecretSanta.Data
         public DbSet<Group> Groups { get; set; }
         //public DbSet<UserGroup> UserGroups { get; set; } commented because it may not be needed. uncomment if you need it.
         public IHttpContextAccessor HttpContextAccessor { get; set; }
-
+#nullable disable
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) { }
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options, IHttpContextAccessor httpContextAccessor) : base(options)
         {
             HttpContextAccessor = httpContextAccessor;
         }
+#nullable enable
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<UserGroup>().HasKey(ug => new { ug.UserId, ug.GroupId });

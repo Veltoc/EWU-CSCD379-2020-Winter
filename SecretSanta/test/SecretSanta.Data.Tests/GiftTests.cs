@@ -194,7 +194,7 @@ using System.Threading.Tasks;
                 Assert.AreEqual(1, gifts.Count);    
                 Assert.AreEqual(gift.Title, gifts[0].Title);
                 Assert.AreEqual(gift.Description, gifts[0].Description);
-                // Assert.AreNotEqual(0, gifts[0].Id); should we implement a connecting id?
+                // Assert.AreNotEqual(0, gifts[0].Id); should we implement a connecting id? or did i miss something
             }
         }
     }

@@ -6,7 +6,9 @@ namespace SecretSanta.Data
 {
     public class Group : FingerPrintEntityBase
     {
+#nullable disable
         public string Name { get; set; }
         public List<UserGroup> UserGroup { get; set; }
+#nullable enable
     }
 }

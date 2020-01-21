@@ -40,9 +40,6 @@ namespace SecretSanta.Data.Tests
 				Assert.AreEqual("Lightyear", user.LastName);
 
 			}
-
-
-			//User user = new User(1, null!, "Montoya", new List<Gift>());
 		}
 
 		[TestMethod]
