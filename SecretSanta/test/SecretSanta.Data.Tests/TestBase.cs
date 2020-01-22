@@ -3,10 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using SecretSanta.Data;
-using System;
-using System.Collections.Generic;
-using System.Text;
+
 
 namespace SecretSanta.Data.Tests
 {
@@ -42,16 +39,11 @@ namespace SecretSanta.Data.Tests
                 .EnableSensitiveDataLogging()
                 .Options;
 
-            using (var context = new ApplicationDbContext(Options))
-            {
-                context.Database.EnsureCreated();
-            }
+            using var context = new ApplicationDbContext(Options);
+            context.Database.EnsureCreated();
         }
 
         [TestCleanup]
-        public void CloseConnection()
-        {
-            SqliteConnection.Close();
-        }
+        public void CloseConnection() => SqliteConnection.Close();
     }
 }

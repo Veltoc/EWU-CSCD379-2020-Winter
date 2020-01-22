@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
+
 
 namespace SecretSanta.Data
 {
@@ -17,14 +17,5 @@ namespace SecretSanta.Data
 #nullable enable
         // public Nullable<User> Santa { get; set; } nullable property? something may need to be changed to make this work. or its something else
         public User? Santa { get; set; } //this may make a it a nullable property... unsure.
-
-       /* public User(int id, string firstName, string lastName, List<Gift> gifts)
-        {
-            Id = id;
-            FirstName = firstName;
-            LastName = lastName;
-            Gifts = gifts;
-        }
-        */
     }
 }
