@@ -1,6 +1,7 @@
 using AutoMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using SecretSanta.Business;
@@ -21,11 +22,15 @@ namespace SecretSanta.Api
             services.AddMvc(options => options.EnableEndpointRouting = false);
             services.AddSwaggerDocument();
 
+            services.AddDbContext<ApplicationDbContext>(options =>
+           options.EnableSensitiveDataLogging()
+                   .UseSqlite("Data Source = Santa.db"));
+
             services.AddScoped<IGiftService, GiftService>();
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IGroupService, GroupService>();
 
-            services.AddDbContext<ApplicationDbContext>();
+           
 
             services.AddAutoMapper(new[] { typeof(AutomapperConfigurationProfile).Assembly });
         }

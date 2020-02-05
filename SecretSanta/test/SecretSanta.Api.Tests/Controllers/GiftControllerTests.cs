@@ -1,13 +1,14 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SecretSanta.Api.Controllers;
 using SecretSanta.Business;
+using SecretSanta.Business.Services;
 using SecretSanta.Data;
 using System;
 
 namespace SecretSanta.Api.Tests.Controllers
 {
     [TestClass]
-    public class GiftControllTests : BaseApiControllerTests<Gift, GiftInMemoryService>
+    public class GiftControllerTests : BaseApiControllerTests<Gift, GiftInMemoryService>
     {
         protected override BaseApiController<Gift> CreateController(GiftInMemoryService service)
             => new GiftController(service);

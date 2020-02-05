@@ -39,6 +39,7 @@ namespace SecretSanta.Business.Services
 
         public virtual async Task<List<TDto>> FetchAllAsync()
         {
+
             return Mapper.Map<List<TEntity>, List<TDto>>(await Query.ToListAsync());
         }
 
@@ -47,9 +48,9 @@ namespace SecretSanta.Business.Services
             return Mapper.Map<TEntity, TDto>(await Query.FirstOrDefaultAsync(x => x.Id == id));
         }
 
-        public async Task<TDto> InsertAsync(TInputDto dto)
+        public async Task<TDto> InsertAsync(TInputDto inputDto)
         {
-            TEntity entity = Mapper.Map<TInputDto, TEntity>(dto);
+            TEntity entity = Mapper.Map<TInputDto, TEntity>(inputDto);
             DbContext.Add(entity);
             await DbContext.SaveChangesAsync();
             return Mapper.Map<TEntity, TDto>(entity);

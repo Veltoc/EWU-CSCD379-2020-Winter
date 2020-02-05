@@ -6,6 +6,7 @@ using SecretSanta.Data;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Threading.Tasks;
 
 namespace SecretSanta.Api.Tests.Controllers
@@ -15,9 +16,33 @@ namespace SecretSanta.Api.Tests.Controllers
         where TEntity : EntityBase
         where TService : InMemoryEntityService<TEntity>, new()
     {
+        private SecretSantaWebApplicationFactory Factory { get; set; } 
         protected abstract BaseApiController<TEntity> CreateController(TService service);
 
         protected abstract TEntity CreateEntity();
+
+        [TestInitialize]
+        public void TestSetup()
+        {
+            Factory = new SecretSantaWebApplicationFactory();
+        }
+        [TestCleanup]
+        public void TestCleanup()
+        {
+            Factory.Dispose();
+        }
+        [TestMethod]
+        public async Task Get_ReturnsAuthors()
+        {
+            using ApplicationDbContext context = Factory.GetDbContext();
+            context.Gifts.Add(SampleData)
+
+            HttpClient client = Factory.CreateClient();
+
+            HttpResponseMessage response = await client.GetAsync("api/Author");//GetAsync(string) use the abstract for a string per to point for this
+
+            response.EnsureSuccessStatusCode();
+        }
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
