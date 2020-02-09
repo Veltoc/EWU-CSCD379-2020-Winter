@@ -5,9 +5,9 @@ using System.Text;
 
 namespace SecretSanta.Business.Dto
 {
-    public class Gift : GiftInput, IEntity
+    public interface IEntity
     {
         [Required]
-        public int Id { get; set; }
+        int Id { get; }
     }
 }

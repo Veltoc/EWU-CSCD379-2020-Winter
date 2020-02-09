@@ -19,20 +19,25 @@ namespace SecretSanta.Api
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public static void ConfigureServices(IServiceCollection services)
         {
-            services.AddMvc(options => options.EnableEndpointRouting = false);
-            services.AddSwaggerDocument();
+            //services.AddMvc(options => options.EnableEndpointRouting = false);
+            
 
             services.AddDbContext<ApplicationDbContext>(options =>
-           options.EnableSensitiveDataLogging()
-                   .UseSqlite("Data Source = Santa.db"));
+           {
+               options.EnableSensitiveDataLogging()
+                       .UseSqlite("Data Source = Santa.db");
+           });
 
             services.AddScoped<IGiftService, GiftService>();
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IGroupService, GroupService>();
 
-           
 
-            services.AddAutoMapper(new[] { typeof(AutomapperConfigurationProfile).Assembly });
+            System.Type profileType = typeof(AutomapperConfigurationProfile);
+            System.Reflection.Assembly assembly = profileType.Assembly;
+            services.AddAutoMapper(new[] { assembly });
+            services.AddMvc(op => op.EnableEndpointRouting = false);
+            services.AddSwaggerDocument();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

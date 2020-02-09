@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SecretSanta.Api.Controllers;
 using SecretSanta.Business;
@@ -8,43 +9,70 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
+using SecretSanta.Business.Services;
 
 namespace SecretSanta.Api.Tests.Controllers
 {
     [TestClass]
-    public abstract class BaseApiControllerTests<TEntity, TService> 
+    public abstract class BaseApiControllerTests<TEntity, TDto,TInputDto>
         where TEntity : EntityBase
-        where TService : InMemoryEntityService<TEntity>, new()
+        where TDto : class, TInputDto
+        where TInputDto : class
     {
-        private SecretSantaWebApplicationFactory Factory { get; set; } 
-        protected abstract BaseApiController<TEntity> CreateController(TService service);
+#nullable disable
+        protected SecretSantaWebApplicationFactory Factory { get; set; } 
+        protected HttpClient Client { get; set; }
+#nullable enable
+        protected IMapper Mapper { get; set; } = AutomapperConfigurationProfile.CreateMapper();
+
+        //protected abstract BaseApiController<TDto,TInputDto> CreateController(TService service);
 
         protected abstract TEntity CreateEntity();
+        //protected abstract TInputDto CreateInput();
 
         [TestInitialize]
         public void TestSetup()
         {
             Factory = new SecretSantaWebApplicationFactory();
+
+            using ApplicationDbContext context = Factory.GetDbContext();
+            context.Database.EnsureCreated();
+
+            Client = Factory.CreateClient();
+
+            SeedData();
         }
         [TestCleanup]
         public void TestCleanup()
         {
             Factory.Dispose();
         }
-        [TestMethod]
-        public async Task Get_ReturnsAuthors()
+        public void SeedData()
         {
             using ApplicationDbContext context = Factory.GetDbContext();
-            context.Gifts.Add(SampleData)
-
-            HttpClient client = Factory.CreateClient();
-
-            HttpResponseMessage response = await client.GetAsync("api/Author");//GetAsync(string) use the abstract for a string per to point for this
-
-            response.EnsureSuccessStatusCode();
+            for (int i = 0; i < 9; i++)
+            {
+                TEntity entity = CreateEntity();
+                context.Add(entity);
+                context.SaveChanges();
+                Console.WriteLine(context.Entry(entity).Entity.Id);
+            }
         }
+        /*   [TestMethod]
+           public async Task Get_ReturnsGifts()
+           {
+               using ApplicationDbContext context = Factory.GetDbContext();
+               context.Gifts.Add(SampleData)
 
-        [TestMethod]
+               HttpClient client = Factory.CreateClient();
+
+               HttpResponseMessage response = await client.GetAsync("api/Gift");//GetAsync(string) use the abstract for a string per to point for this
+
+               response.EnsureSuccessStatusCode();
+           }
+
+
+           [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
         public void Constructor_RequiresService()
         {
@@ -59,7 +87,7 @@ namespace SecretSanta.Api.Tests.Controllers
             service.Items.Add(CreateEntity());
             service.Items.Add(CreateEntity());
 
-            BaseApiController<TEntity> controller = CreateController(service);
+            BaseApiController<TDto,TInputDto> controller = CreateController(service);
 
             IEnumerable<TEntity> items = await controller.Get();
 
@@ -70,7 +98,7 @@ namespace SecretSanta.Api.Tests.Controllers
         public async Task Get_WhenEntityDoesNotExist_ReturnsNotFound()
         {
             TService service = new TService();
-            BaseApiController<TEntity> controller = CreateController(service);
+            BaseApiController<TDto, TInputDto> controller = CreateController(service);
 
             IActionResult result = await controller.Get(1);
 
@@ -84,7 +112,7 @@ namespace SecretSanta.Api.Tests.Controllers
             TService service = new TService();
             TEntity entity = CreateEntity();
             service.Items.Add(entity);
-            BaseApiController<TEntity> controller = CreateController(service);
+            BaseApiController<TDto, TInputDto> controller = CreateController(service);
 
             IActionResult result = await controller.Get(entity.Id);
 
@@ -100,7 +128,7 @@ namespace SecretSanta.Api.Tests.Controllers
             TEntity entity1 = CreateEntity();
             service.Items.Add(entity1);
             TEntity entity2 = CreateEntity();
-            BaseApiController<TEntity> controller = CreateController(service);
+            BaseApiController<TDto, TInputDto> controller = CreateController(service);
 
             TEntity? result = await controller.Put(entity1.Id, entity2);
 
@@ -113,7 +141,7 @@ namespace SecretSanta.Api.Tests.Controllers
         {
             TService service = new TService();
             TEntity entity = CreateEntity();
-            BaseApiController<TEntity> controller = CreateController(service);
+            BaseApiController<TDto, TInputDto> controller = CreateController(service);
 
             TEntity? result = await controller.Post(entity);
 
@@ -125,7 +153,7 @@ namespace SecretSanta.Api.Tests.Controllers
         public async Task Delete_WhenItemDoesNotExist_ReturnsNotFound()
         {
             TService service = new TService();
-            BaseApiController<TEntity> controller = CreateController(service);
+            BaseApiController<TDto, TInputDto> controller = CreateController(service);
 
             IActionResult result = await controller.Delete(1);
 
@@ -138,7 +166,7 @@ namespace SecretSanta.Api.Tests.Controllers
             TService service = new TService();
             TEntity entity = CreateEntity();
             service.Items.Add(entity);
-            BaseApiController<TEntity> controller = CreateController(service);
+            BaseApiController<TDto, TInputDto> controller = CreateController(service);
 
             IActionResult result = await controller.Delete(entity.Id);
 
@@ -150,45 +178,7 @@ namespace SecretSanta.Api.Tests.Controllers
             public ThrowingController() : base(null!)
             { }
         }
-    }
+           */
 
-    public class InMemoryEntityService<TEntity> : IEntityService<TEntity> where TEntity : EntityBase
-    {
-        public IList<TEntity> Items { get; } = new List<TEntity>();
-
-        public Task<bool> DeleteAsync(int id)
-        {
-            if (Items.FirstOrDefault(x => x.Id == id) is { } found)
-            {
-                return Task.FromResult(Items.Remove(found));
-            }
-            return Task.FromResult(false);
-        }
-
-        public Task<List<TEntity>> FetchAllAsync()
-        {
-            return Task.FromResult(Items.ToList());
-        }
-
-        public Task<TEntity> FetchByIdAsync(int id)
-        {
-            return Task.FromResult(Items.FirstOrDefault(x => x.Id == id));
-        }
-
-        public Task<TEntity> InsertAsync(TEntity entity)
-        {
-            Items.Add(entity);
-            return Task.FromResult(entity);
-        }
-
-        public Task<TEntity?> UpdateAsync(int id, TEntity entity)
-        {
-            if (Items.FirstOrDefault(x => x.Id == id) is { } found)
-            {
-                Items[Items.IndexOf(found)] = entity;
-                return Task.FromResult<TEntity?>(entity);
-            }
-            return Task.FromResult(default(TEntity));
-        }
     }
 }

@@ -9,7 +9,8 @@ using System.Threading.Tasks;
 
 namespace SecretSanta.Api.Controllers
 {
-    public abstract class BaseApiController<TDto, TInputDto> : ControllerBase where TInputDto : class
+    public abstract class BaseApiController<TDto, TInputDto> : ControllerBase 
+        where TInputDto : class
         where TDto : class, TInputDto
     {
         protected IEntityService<TDto, TInputDto> Service { get; }
@@ -37,13 +38,19 @@ namespace SecretSanta.Api.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<TDto?> Put(int id, [FromBody] TDto value)
+        public async Task<ActionResult<TDto?>> Put(int id, [FromBody] TInputDto value)
         {
-            return await Service.UpdateAsync(id, value);
+            //return await Service.UpdateAsync(id, value);
+            TDto? entity = await Service.UpdateAsync(id, value);
+            if (entity is null)
+            {
+                return NotFound();
+            }
+            return Ok(entity);
         }
 
         [HttpPost]
-        public async Task<TDto> Post(TDto entity)
+        public async Task<TDto> Post(TInputDto entity)
         {
             return await Service.InsertAsync(entity);
         }
