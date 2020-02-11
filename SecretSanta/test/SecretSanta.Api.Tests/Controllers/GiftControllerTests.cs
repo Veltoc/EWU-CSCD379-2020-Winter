@@ -154,8 +154,7 @@ namespace SecretSanta.Api.Tests.Controllers
 
         [TestMethod]
         [DataRow(nameof(Business.Dto.GiftInput.Title))]
-        [DataRow(nameof(Business.Dto.GiftInput.Description))]
-        [DataRow(nameof(Business.Dto.GiftInput.Url))]
+        [DataRow(nameof(Business.Dto.GiftInput.UserId))]
         public async Task Post_WithoutData_BadResult(string propertyName)
         {
             Data.Gift entity = CreateEntity();

@@ -24,11 +24,7 @@ namespace SecretSanta.Api.Tests.Controllers
         protected HttpClient Client { get; set; }
 #nullable enable
         protected IMapper Mapper { get; set; } = AutomapperConfigurationProfile.CreateMapper();
-
-        //protected abstract BaseApiController<TDto,TInputDto> CreateController(TService service);
-
         protected abstract TEntity CreateEntity();
-        //protected abstract TInputDto CreateInput();
 
         [TestInitialize]
         public void TestSetup()
