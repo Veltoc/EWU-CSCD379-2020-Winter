@@ -23,17 +23,6 @@ namespace SecretSanta.Api.Tests.Controllers
                 Guid.NewGuid().ToString(),  
                 Guid.NewGuid().ToString(),
                 new Data.User(Guid.NewGuid().ToString(), Guid.NewGuid().ToString()));
-        protected Business.Dto.GiftInput CreateInputDto()
-        {
-            return new Business.Dto.GiftInput
-            {
-                Title = Guid.NewGuid().ToString(),
-                Description = Guid.NewGuid().ToString(),
-                Url = Guid.NewGuid().ToString(),
-                UserId = 1
-            };
-        }
-        
 
         [TestMethod]
         public async Task Get_ReturnsGifts()
@@ -70,8 +59,7 @@ namespace SecretSanta.Api.Tests.Controllers
         public async Task Put_WithMissingId_NotFound()
         {
             // Arrange
-            //Business.Dto.GiftInput um = Mapper.Map<Data.Gift, Business.Dto.Gift>(CreateEntity());
-            Business.Dto.GiftInput um = CreateInputDto();
+            Business.Dto.GiftInput um = Mapper.Map<Data.Gift, Business.Dto.Gift>(CreateEntity());
             string jsonData = JsonSerializer.Serialize(um);
 
             using StringContent stringContent = new StringContent(jsonData, Encoding.UTF8, "application/json");
@@ -88,13 +76,12 @@ namespace SecretSanta.Api.Tests.Controllers
         public async Task Put_WithId_UpdatesEntity()
         {
             // Arrange
-            //var entity = CreateEntity();
+            var entity = CreateEntity();
             using ApplicationDbContext context = Factory.GetDbContext();
-            //context.Gifts.Add(entity);
-            //context.SaveChanges();
+            context.Gifts.Add(entity);
+            context.SaveChanges();
 
-            Gift entity = await context.Gifts.FirstOrDefaultAsync();
-            Business.Dto.GiftInput giftInput = CreateInputDto();//Mapper.Map<Gift, Business.Dto.Gift>(entity);
+            Business.Dto.GiftInput giftInput = Mapper.Map<Gift, Business.Dto.Gift>(entity);
             giftInput.Title = entity.Title += " changed";
             giftInput.Description = entity.Description += " changed";
             giftInput.Url = entity.Url += " changed";
@@ -125,7 +112,7 @@ namespace SecretSanta.Api.Tests.Controllers
             Assert.AreEqual(giftInput.UserId, returnedGift.UserId);
 
             // Assert that returnedGift matches database value
-            Data.Gift dataGift = await context.Gifts.FindAsync(entity.Id);
+            Data.Gift dataGift = await context.Gifts.FindAsync(returnedGift.Id);
             Assert.AreEqual(giftInput.Title, dataGift.Title);
             Assert.AreEqual(giftInput.Description, dataGift.Description);
             Assert.AreEqual(giftInput.Url, dataGift.Url);
@@ -136,8 +123,7 @@ namespace SecretSanta.Api.Tests.Controllers
         public async Task Put_WithInvalid_Fails()
         {
             using ApplicationDbContext context = Factory.GetDbContext();
-           
-            Business.Dto.GiftInput giftInput = CreateInputDto();//Mapper.Map<Gift, Business.Dto.Gift>(entity);
+            Business.Dto.GiftInput giftInput = Mapper.Map<Gift, Business.Dto.Gift>(CreateEntity());
             giftInput.Title = null;
 
             string jsonData = JsonSerializer.Serialize(giftInput);
@@ -179,12 +165,12 @@ namespace SecretSanta.Api.Tests.Controllers
         public async Task Post_Valid_AddsGift()
         {
             // Arrange
-            //var entity = CreateEntity();
+            var entity = CreateEntity();
             using ApplicationDbContext context = Factory.GetDbContext();
-            //context.Gifts.Add(entity);
-            //context.SaveChanges();
+            context.Gifts.Add(entity);
+            context.SaveChanges();
 
-            Business.Dto.GiftInput giftInput = CreateInputDto();//Mapper.Map<Gift, Business.Dto.Gift>(entity);
+            Business.Dto.GiftInput giftInput = Mapper.Map<Gift, Business.Dto.Gift>(entity);
 
 
             string jsonData = JsonSerializer.Serialize(giftInput);

@@ -22,14 +22,6 @@ namespace SecretSanta.Api.Tests.Controllers
                 Guid.NewGuid().ToString(),
                 Guid.NewGuid().ToString());
 
-        protected Business.Dto.UserInput CreateInputDto()
-        {
-            return new Business.Dto.UserInput
-            {
-                FirstName = Guid.NewGuid().ToString(),
-                LastName = Guid.NewGuid().ToString()
-            };
-        }
 
 
         [TestMethod]
@@ -66,8 +58,8 @@ namespace SecretSanta.Api.Tests.Controllers
         public async Task Put_WithMissingId_NotFound()
         {
             // Arrange
-            //Business.Dto.UserInput im = Mapper.Map<Data.User, Business.Dto.User>(CreateEntity());
-            Business.Dto.UserInput im = CreateInputDto();
+            Business.Dto.UserInput im = Mapper.Map<Data.User, Business.Dto.User>(CreateEntity());
+
             string jsonData = JsonSerializer.Serialize(im);
 
             using StringContent stringContent = new StringContent(jsonData, Encoding.UTF8, "application/json");
@@ -84,13 +76,12 @@ namespace SecretSanta.Api.Tests.Controllers
         public async Task Put_WithId_UpdatesEntity()
         {
             // Arrange
-            //var entity = CreateEntity();
+            var entity = CreateEntity();
             using ApplicationDbContext context = Factory.GetDbContext();
-            //context.Users.Add(entity);
-            //context.SaveChanges();
+            context.Users.Add(entity);
+            context.SaveChanges();
 
-            User entity = await context.Users.FirstOrDefaultAsync();
-            Business.Dto.UserInput userInput = CreateInputDto();//Mapper.Map<User, Business.Dto.User>(entity);
+            Business.Dto.UserInput userInput = Mapper.Map<User, Business.Dto.User>(entity);
             userInput.FirstName = entity.FirstName += " changed";
             userInput.LastName = entity.LastName += " changed";
 
@@ -118,7 +109,7 @@ namespace SecretSanta.Api.Tests.Controllers
             Assert.AreEqual(userInput.LastName, returnedUser.LastName);
 
             // Assert that returnedUser matches database value
-            Data.User dataUser = await context.Users.FindAsync(entity.Id);
+            Data.User dataUser = await context.Users.FindAsync(returnedUser.Id);
             Assert.AreEqual(userInput.FirstName, dataUser.FirstName);
             Assert.AreEqual(userInput.LastName, dataUser.LastName);
 
@@ -129,7 +120,7 @@ namespace SecretSanta.Api.Tests.Controllers
         {
             using ApplicationDbContext context = Factory.GetDbContext();
 
-            Business.Dto.UserInput userInput = CreateInputDto();//Mapper.Map<User, Business.Dto.User>(entity);
+            Business.Dto.UserInput userInput = Mapper.Map<User, Business.Dto.User>(CreateEntity());
             userInput.FirstName = null;
 
             string jsonData = JsonSerializer.Serialize(userInput);
@@ -171,12 +162,12 @@ namespace SecretSanta.Api.Tests.Controllers
         public async Task Post_Valid_AddsUser()
         {
             // Arrange
-            //var entity = CreateEntity();
+            var entity = CreateEntity();
             using ApplicationDbContext context = Factory.GetDbContext();
-            //context.Users.Add(entity);
-            //context.SaveChanges();
+            context.Users.Add(entity);
+            context.SaveChanges();
 
-            Business.Dto.UserInput userInput = CreateInputDto();//Mapper.Map<User, Business.Dto.User>(entity);
+            Business.Dto.UserInput userInput = Mapper.Map<User, Business.Dto.User>(entity);
 
 
             string jsonData = JsonSerializer.Serialize(userInput);

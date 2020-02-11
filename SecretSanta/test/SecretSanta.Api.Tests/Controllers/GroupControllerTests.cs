@@ -18,13 +18,6 @@ namespace SecretSanta.Api.Tests.Controllers
         protected override Data.Group CreateEntity()
             => new Data.Group(Guid.NewGuid().ToString());
 
-        protected Business.Dto.GroupInput CreateInputDto()
-        {
-            return new Business.Dto.GroupInput
-            {
-                Title = Guid.NewGuid().ToString()
-            };
-        }
 
         [TestMethod]
         public async Task Get_ReturnsGroups()
@@ -60,8 +53,7 @@ namespace SecretSanta.Api.Tests.Controllers
         public async Task Put_WithMissingId_NotFound()
         {
             // Arrange
-            //Business.Dto.GroupInput gm = Mapper.Map<Data.Group, Business.Dto.Group>(CreateEntity());
-            Business.Dto.GroupInput gm = CreateInputDto();
+            Business.Dto.GroupInput gm = Mapper.Map<Data.Group, Business.Dto.Group>(CreateEntity());
             string jsonData = JsonSerializer.Serialize(gm);
 
             using StringContent stringContent = new StringContent(jsonData, Encoding.UTF8, "application/json");
@@ -78,13 +70,12 @@ namespace SecretSanta.Api.Tests.Controllers
         public async Task Put_WithId_UpdatesEntity()
         {
             // Arrange
-            //var entity = CreateEntity();
+            var entity = CreateEntity();
             using ApplicationDbContext context = Factory.GetDbContext();
-            //context.Groups.Add(entity);
-            //context.SaveChanges();
+            context.Groups.Add(entity);
+            context.SaveChanges();
 
-            Group entity = await context.Groups.FirstOrDefaultAsync();
-            Business.Dto.GroupInput groupInput = CreateInputDto();//Mapper.Map<Group, Business.Dto.Group>(entity);
+            Business.Dto.GroupInput groupInput = Mapper.Map<Group, Business.Dto.Group>(entity);
             groupInput.Title = entity.Title += " changed";
 
 
@@ -109,16 +100,16 @@ namespace SecretSanta.Api.Tests.Controllers
             // Assert that returnedGroup matches gm values
             Assert.AreEqual(groupInput.Title, returnedGroup.Title);
             // Assert that returnedGroup matches database value
-            Data.Group dataGroup = await context.Groups.FindAsync(entity.Id);
+            Data.Group dataGroup = await context.Groups.FindAsync(returnedGroup.Id);
             Assert.AreEqual(groupInput.Title, dataGroup.Title);
         }
 
         [TestMethod]
         public async Task Put_WithInvalid_Fails()
         {
+            //Arrange
             using ApplicationDbContext context = Factory.GetDbContext();
-
-            Business.Dto.GroupInput groupInput = CreateInputDto();//Mapper.Map<Group, Business.Dto.Group>(entity);
+            Business.Dto.GroupInput groupInput = Mapper.Map<Group, Business.Dto.Group>(CreateEntity());
             groupInput.Title = null;
 
             string jsonData = JsonSerializer.Serialize(groupInput);
@@ -159,12 +150,12 @@ namespace SecretSanta.Api.Tests.Controllers
         public async Task Post_Valid_AddsGroup()
         {
             // Arrange
-            //var entity = CreateEntity();
+            var entity = CreateEntity();
             using ApplicationDbContext context = Factory.GetDbContext();
-            //context.Groups.Add(entity);
-            //context.SaveChanges();
+            context.Groups.Add(entity);
+            context.SaveChanges();
 
-            Business.Dto.GroupInput groupInput = CreateInputDto();//Mapper.Map<Group, Business.Dto.Group>(entity);
+            Business.Dto.GroupInput groupInput = Mapper.Map<Group, Business.Dto.Group>(entity);
 
 
             string jsonData = JsonSerializer.Serialize(groupInput);
