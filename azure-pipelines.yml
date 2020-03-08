@@ -23,6 +23,6 @@ steps:
     projects: '**/*.csproj'
 - task: DotNetCoreCLI@2
   inputs:
-    command: 'test --filter TestCategory!=Chrome'
+    command: 'test'
     projects: '**/test/**/*.csproj'
 

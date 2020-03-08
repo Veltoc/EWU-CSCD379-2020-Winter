@@ -23,22 +23,22 @@ namespace SecretSanta.Web.Tests
             Driver.Manage().Timeouts().ImplicitWait = new System.TimeSpan(0, 0, 10);
         }
 
-        [TestMethod]
-        [TestCategory("Chrome")]
-        public void ValidateLinks_GiftsListPage()
-        {
-            Driver.Navigate().GoToUrl(new Uri(AppUrl));
-            IReadOnlyCollection<IWebElement> links = Driver.FindElements(By.TagName("a"));
+        //[TestMethod]
+        //[TestCategory("Chrome")]
+        //public void ValidateLinks_GiftsListPage()
+        //{
+        //    Driver.Navigate().GoToUrl(new Uri(AppUrl));
+        //    IReadOnlyCollection<IWebElement> links = Driver.FindElements(By.TagName("a"));
 
-            foreach (var link in links)
-            {
-                if (link.Displayed) //there is a null/empty link to create the hamburger dropdown mobile menu
-                {
-                    string url = link.GetAttribute("href");
-                    Assert.IsTrue(Uri.IsWellFormedUriString(url, UriKind.RelativeOrAbsolute));
-                }
-            }
-        }
+        //    foreach (var link in links)
+        //    {
+        //        if (link.Displayed) //there is a null/empty link to create the hamburger dropdown mobile menu
+        //        {
+        //            string url = link.GetAttribute("href");
+        //            Assert.IsTrue(Uri.IsWellFormedUriString(url, UriKind.RelativeOrAbsolute));
+        //        }
+        //    }
+        //}
 
         [TestCleanup()]
         public void TestCleanup()
