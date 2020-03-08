@@ -75,8 +75,8 @@ namespace SecretSanta.Web.Tests
         [TestInitialize]
         public void TestInitialize()
         {
-            Driver = new ChromeDriver();
-            //Driver = new ChromeDriver(Environment.GetEnvironmentVariable("ChromeWebDriver"));//supposedly required for Azure
+            //Driver = new ChromeDriver();
+            Driver = new ChromeDriver(Environment.GetEnvironmentVariable("ChromeWebDriver"));//supposedly required for Azure
             Driver.Manage().Timeouts().ImplicitWait = new System.TimeSpan(0, 0, 10);
         }
 
