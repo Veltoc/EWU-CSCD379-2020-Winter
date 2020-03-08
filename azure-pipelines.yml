@@ -23,14 +23,6 @@ steps:
     projects: '**/*.csproj'
 - task: DotNetCoreCLI@2
   inputs:
-    command: 'test'
+    command: 'test --filter TestCategory!=Chrome'
     projects: '**/test/**/*.csproj'
-- task: VSTest@2
-  inputs:
-    testSelector: 'testAssemblies'
-    testAssemblyVer2: |
-      **\*test*.dll
-      !**\*TestAdapter.dll
-      !**\obj\**
-    searchFolder: '$(System.DefaultWorkingDirectory)'
-    vsTestVersion: 'toolsInstaller'
+
