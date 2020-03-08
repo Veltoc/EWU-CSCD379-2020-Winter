@@ -34,6 +34,7 @@ namespace SecretSanta.Web.Tests
 
             ApiHostProcess = Process.Start("dotnet.exe", "run -p ..\\..\\..\\..\\..\\src\\SecretSanta.Api\\SecretSanta.Api.csproj");
             WebHostProcess = Process.Start("dotnet.exe", "run -p ..\\..\\..\\..\\..\\src\\SecretSanta.Web\\SecretSanta.Web.csproj");
+            ApiHostProcess.WaitForExit(8000);
 
             //AddUser
             HttpClient httpClient = new HttpClient();
@@ -155,23 +156,23 @@ namespace SecretSanta.Web.Tests
             TakeScreenShot("Create_Gift_Success_Test_Screenshot");
         }
 
-        //////----------------- VALIDATE LINKS -----------------//
-        //[TestMethod]
-        //[TestCategory("Chrome")]
-        //public void ValidateLinks_GiftsListPage()
-        //{
-        //    Driver.Navigate().GoToUrl(new Uri(AppUrl));
-        //    IReadOnlyCollection<IWebElement> links = Driver.FindElements(By.TagName("a"));
+        ////----------------- VALIDATE LINKS -----------------//
+        [TestMethod]
+        [TestCategory("Chrome")]
+        public void ValidateLinks_GiftsListPage()
+        {
+            Driver.Navigate().GoToUrl(new Uri(AppUrl));
+            IReadOnlyCollection<IWebElement> links = Driver.FindElements(By.TagName("a"));
 
-        //    foreach (var link in links)
-        //    {
-        //        if (link.Displayed) //there is a null/empty link to create the hamburger dropdown mobile menu
-        //        {
-        //            string url = link.GetAttribute("href");
-        //            Assert.IsTrue(Uri.IsWellFormedUriString(url, UriKind.RelativeOrAbsolute));
-        //        }
-        //    }
-        //}
+            foreach (var link in links)
+            {
+                if (link.Displayed) //there is a null/empty link to create the hamburger dropdown mobile menu
+                {
+                    string url = link.GetAttribute("href");
+                    Assert.IsTrue(Uri.IsWellFormedUriString(url, UriKind.RelativeOrAbsolute));
+                }
+            }
+        }
 
         [TestCleanup()]
         public void TestCleanup()
