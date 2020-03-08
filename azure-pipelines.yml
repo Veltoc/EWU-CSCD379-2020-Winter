@@ -9,6 +9,9 @@ variables:
 
 
 steps:
+- task: Npm@1
+  inputs:
+    command: 'install'
 - task: UseDotNet@2
   inputs:
     packageType: 'sdk'
