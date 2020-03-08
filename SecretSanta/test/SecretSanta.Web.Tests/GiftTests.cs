@@ -24,7 +24,7 @@ namespace SecretSanta.Web.Tests
         private IWebDriver? Driver { get; set; }
         private static Process? ApiHostProcess { get; set; }
         private static Process? WebHostProcess { get; set; }
-        string AppUrl { get; } = "https://localhost:44394/Gifts";
+        string AppUrl { get; } = "https://localhost:5001/Gifts";
 
         [ClassInitialize]
         public static async Task ClassInitalize(TestContext testContext)
@@ -38,7 +38,7 @@ namespace SecretSanta.Web.Tests
 
             //AddUser
             HttpClient httpClient = new HttpClient();
-            httpClient.BaseAddress = new Uri("https://localhost:44388/");
+            httpClient.BaseAddress = new Uri("https://localhost:5000/");
             Console.WriteLine("Uri passed");
             httpClient.DefaultRequestHeaders.Accept.Clear();
             httpClient.DefaultRequestHeaders.Accept.Add(
