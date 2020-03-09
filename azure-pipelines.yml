@@ -16,13 +16,16 @@ steps:
 - task: UseDotNet@2
   inputs:
     packageType: 'sdk'
-    version: '3.1.101'
+    version: '3.1.*'
 - task: DotNetCoreCLI@2
   inputs:
     command: 'build'
     projects: '**/*.csproj'
-- task: DotNetCoreCLI@2
+- task: VSTest@2
   inputs:
-    command: 'test'
-    projects: '**/test/**/*.csproj'
-
+    testSelector: 'testAssemblies'
+    testAssemblyVer2: |
+      **\*test*.dll
+      !**\*TestAdapter.dll
+      !**\obj\**
+    searchFolder: '$(System.DefaultWorkingDirectory)'
