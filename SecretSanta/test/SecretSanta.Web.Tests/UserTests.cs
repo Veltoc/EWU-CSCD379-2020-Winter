@@ -25,7 +25,7 @@ namespace SecretSanta.Web.Tests
 
         [TestMethod]
         [TestCategory("Chrome")]
-        public void ValidateLinks_GiftsListPage()
+        public void ValidateLinks_UsersListPage()
         {
             Driver.Navigate().GoToUrl(new Uri(AppUrl));
             IReadOnlyCollection<IWebElement> links = Driver.FindElements(By.TagName("a"));
