@@ -34,10 +34,12 @@ namespace SecretSanta.Web.Tests
 
             ApiHostProcess = Process.Start("dotnet.exe", "run -p ..\\..\\..\\..\\..\\src\\SecretSanta.Api\\SecretSanta.Api.csproj");
             WebHostProcess = Process.Start("dotnet.exe", "run -p ..\\..\\..\\..\\..\\src\\SecretSanta.Web\\SecretSanta.Web.csproj");
-            ApiHostProcess.WaitForExit(8000);
+            ApiHostProcess.WaitForExit(6000);
 
             //AddUser
-            HttpClient httpClient = new HttpClient();
+            HttpClientHandler handler = new HttpClientHandler();
+            handler.UseDefaultCredentials = true;
+            HttpClient httpClient = new HttpClient(handler);
             httpClient.BaseAddress = new Uri("https://localhost:5000/");
             Console.WriteLine("Uri passed");
             httpClient.DefaultRequestHeaders.Accept.Clear();
@@ -77,8 +79,8 @@ namespace SecretSanta.Web.Tests
         [TestInitialize]
         public void TestInitialize()
         {
-            //Driver = new ChromeDriver();
-            Driver = new ChromeDriver(Environment.GetEnvironmentVariable("ChromeWebDriver"));//supposedly required for Azure
+           //Driver = new ChromeDriver();
+           Driver = new ChromeDriver(Environment.GetEnvironmentVariable("ChromeWebDriver"));//supposedly required for Azure
             Driver.Manage().Timeouts().ImplicitWait = new System.TimeSpan(0, 0, 10);
         }
 
