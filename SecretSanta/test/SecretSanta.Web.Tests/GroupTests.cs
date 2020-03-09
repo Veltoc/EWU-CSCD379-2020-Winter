@@ -14,7 +14,7 @@ namespace SecretSanta.Web.Tests
         public TestContext? TestContext { get; set; }
         [NotNull]
         private IWebDriver? Driver { get; set; }
-        string AppUrl { get; } = "https://localhost:5001/Group";
+        string AppUrl { get; } = "http://localhost:5001/Group";
 
         [TestInitialize]
         public void TestInitialize()
