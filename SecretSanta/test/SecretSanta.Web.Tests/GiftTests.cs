@@ -38,7 +38,12 @@ namespace SecretSanta.Web.Tests
 
             //AddUser
             HttpClientHandler handler = new HttpClientHandler();
-            handler.UseDefaultCredentials = true;
+            handler.ClientCertificateOptions = ClientCertificateOption.Manual;
+            handler.ServerCertificateCustomValidationCallback =
+                (httpRequestMessage, cert, cetChain, policyErrors) =>
+                {
+                    return true;
+                };
             HttpClient httpClient = new HttpClient(handler);
             httpClient.BaseAddress = new Uri("https://localhost:5000/");
             Console.WriteLine("Uri passed");
