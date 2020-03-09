@@ -37,14 +37,8 @@ namespace SecretSanta.Web.Tests
             ApiHostProcess.WaitForExit(6000);
 
             //AddUser
-            HttpClientHandler handler = new HttpClientHandler();
-            handler.ClientCertificateOptions = ClientCertificateOption.Manual;
-            handler.ServerCertificateCustomValidationCallback =
-                (httpRequestMessage, cert, cetChain, policyErrors) =>
-                {
-                    return true;
-                };
-            HttpClient httpClient = new HttpClient(handler);
+            
+            HttpClient httpClient = new HttpClient();
             httpClient.BaseAddress = new Uri("http://localhost:5000/");
             Console.WriteLine("Uri passed");
             httpClient.DefaultRequestHeaders.Accept.Clear();
