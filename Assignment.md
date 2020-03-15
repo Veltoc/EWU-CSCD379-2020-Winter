@@ -21,10 +21,13 @@ For this assignment we will be publishing our web application out to Azure.
 
 ## To submit in PR
 In the pull request include the following:
-- A link to your published API swagger page.
-- A link to your published web site.
+- [A link to your published API swagger page.](https://masonapi2.azurewebsites.net/swagger/index.html)
+- [A link to your published web site.](https://masonweb2.azurewebsites.net)
+
 - A screenshot showing the Azure Resource Group with all resources.
+![Resource Group](https://github.com/Veltoc/EWU-CSCD379-2020-Winter/blob/Assignment10/resourcegroup.png)
 - A screenshot showing the release pipeline that did the deployment.
+![Release Pipeline](https://github.com/Veltoc/EWU-CSCD379-2020-Winter/blob/Assignment10/releasepipeline.png)
 - Updated build pipeline yaml file.
 
 ## Documentation 
